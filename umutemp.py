@@ -29,19 +29,16 @@ def fetch_data():
 
     temp = "{} °C".format(temp)
     speed = "{} m/s".format(speed)
-    return { 'temp': temp, 'wind': { 'speed': speed, 'words': words} }
+    return temp, speed, words
 
 
 def main():
     import os
-    data = fetch_data()
+    temp, speed, words = fetch_data()
 
-    try:
-        script = 'display notification "{} ({})" with title "Temperatur" subtitle "{}"'.format(
-            data['wind']['words'], data['wind']['speed'], data['temp'])
-    except TypeError as e:
-        print(e)
-        return None
+    script = ('display notification "{} ({})"'
+                ' with title "Temperatur"'
+                ' subtitle "{}"').format(words, speed, temp)
 
     os.system("osascript -e '{}'".format(script))
 
