@@ -37,13 +37,13 @@ def main():
     data = fetch_data()
 
     try:
-        command = 'growlnotify -n Temperatur -t "{}" -m "{} ({})"'.format(
-            data['temp'], data['wind']['words'], data['wind']['speed'])
+        script = 'display notification "{} ({})" with title "Temperatur" subtitle "{}"'.format(
+            data['wind']['words'], data['wind']['speed'], data['temp'])
     except TypeError as e:
         print(e)
         return None
 
-    os.system(command)
+    os.system("osascript -e '{}'".format(script))
 
 
 if __name__ == '__main__':
