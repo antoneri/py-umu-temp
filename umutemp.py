@@ -12,7 +12,7 @@ def fetch_data():
     root = ET.fromstring(xml)[0]
 
     def tag_contents(tag):
-        return root.find("{}{}".format(NS, tag)).text.strip()
+        return root.find(NS + tag).text.strip()
 
     temp = tag_contents("tempmed")
     speed = tag_contents("vindh")
