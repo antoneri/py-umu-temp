@@ -35,8 +35,14 @@ def fetch_data():
 def main():
     import os
     data = fetch_data()
-    command = 'growlnotify -n Temperatur -t "{}" -m "{} ({})"'.format(
+
+    try:
+        command = 'growlnotify -n Temperatur -t "{}" -m "{} ({})"'.format(
             data['temp'], data['wind']['words'], data['wind']['speed'])
+    except TypeError as e:
+        print(e)
+        return None
+
     os.system(command)
 
 
