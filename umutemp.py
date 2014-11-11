@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys
 from urllib.request import urlopen
 from html import unescape
 import xml.etree.ElementTree as ET
@@ -19,16 +20,33 @@ def fetch_data():
     return temp, speed, words
 
 
-def main():
+def main(notifier):
     import os
     temp, speed, words = fetch_data()
 
-    script = ('display notification "{} ({})"'
-                ' with title "Temperatur"'
-                ' subtitle "{}"').format(words, speed, temp)
+    if notifier == "growl":
+        icon = "/Library/Widgets/Weather.wdgt/Icon.icns"
+        command = ('growlnotify -n "Temperatur"'
+                    ' -m "Temperatur {}\n{} ({})"'
+                    ' --image "{}"').format(temp, words, speed, icon)
 
-    os.system("osascript -e '{}'".format(script))
+    elif notifier == "osx":
+        script = ('display notification "{} ({})"'
+                    ' with title "Temperatur"'
+                    ' subtitle "{}"').format(words, speed, temp)
+        command = "osascript -e '{}'".format(script)
+        del(script)
+
+    else:
+        sys.exit("Unhandled notifier. Exiting...")
+
+    return os.system(command)
 
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) < 2:
+        notifier = "growl"
+    else:
+        notifier = sys.argv[1]
+
+    main(notifier)
