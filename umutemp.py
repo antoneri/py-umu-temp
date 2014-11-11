@@ -11,12 +11,8 @@ def fetch_data():
     xml = unescape(src)
     root = ET.fromstring(xml)[0]
 
-    def tag_contents(tag):
-        return root.find(NS + tag).text.strip()
-
-    temp = tag_contents("tempmed")
-    speed = tag_contents("vindh")
-    words = tag_contents("vindord")
+    tag_contents = lambda tag: root.find(NS + tag).text.strip()
+    temp, speed, words = map(tag_contents, ["tempmed", "vindh", "vindord"])
 
     temp = "{} °C".format(temp)
     speed = "{} m/s".format(speed)
