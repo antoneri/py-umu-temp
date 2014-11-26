@@ -6,6 +6,7 @@ import xml.etree.ElementTree as ET
 
 URL = "http://www8.tfe.umu.se/WeatherWebService2012/Service.asmx/Aktuellavarden"
 NS = "{http://tempuri.org/}"
+DEFAULT = "growl"
 
 def fetch_data():
     src = urlopen(URL).read().decode('utf-8')
@@ -27,15 +28,14 @@ def main(notifier):
     if notifier == "growl":
         icon = "/Library/Widgets/Weather.wdgt/Icon.icns"
         command = ('growlnotify -n "Temperatur"'
-                    ' -m "Temperatur {}\n{} ({})"'
-                    ' --image "{}"').format(temp, words, speed, icon)
+                   ' -m "Temperatur {}\n{} ({})"'
+                   ' --image "{}"').format(temp, words, speed, icon)
 
     elif notifier == "osx":
         script = ('display notification "{} ({})"'
-                    ' with title "Temperatur"'
-                    ' subtitle "{}"').format(words, speed, temp)
+                  ' with title "Temperatur"'
+                  ' subtitle "{}"').format(words, speed, temp)
         command = "osascript -e '{}'".format(script)
-        del(script)
 
     else:
         sys.exit("Unhandled notifier. Exiting...")
@@ -45,8 +45,7 @@ def main(notifier):
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        notifier = "growl"
+        main(DEFAULT)
     else:
-        notifier = sys.argv[1]
+        main(sys.argv[1])
 
-    main(notifier)
