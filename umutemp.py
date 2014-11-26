@@ -33,8 +33,7 @@ def main(notifier):
 
     elif notifier == "osx":
         script = ('display notification "{} ({})"'
-                  ' with title "Temperatur"'
-                  ' subtitle "{}"').format(words, speed, temp)
+                  ' with title "Temperatur {}"').format(words, speed, temp)
         command = "osascript -e '{}'".format(script)
 
     else:
