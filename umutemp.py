@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 
 URL = "http://www8.tfe.umu.se/WeatherWebService2012/Service.asmx/Aktuellavarden"
 NS = "{http://tempuri.org/}"
-DEFAULT = "growl"
+DEFAULT = "echo"
 
 def fetch_data():
     src = urlopen(URL).read().decode('utf-8')
@@ -35,6 +35,10 @@ def main(notifier):
         script = ('display notification "{} ({})"'
                   ' with title "Temperatur {}"').format(words, speed, temp)
         os.system("osascript -e '{}'".format(script))
+
+
+    elif notifier == "echo":
+        sys.exit("{}, {} ({})".format(temp, words, speed))
 
     else:
         sys.exit("Unhandled notifier. Exiting...")
