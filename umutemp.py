@@ -27,19 +27,17 @@ def main(notifier):
 
     if notifier == "growl":
         icon = "/Library/Widgets/Weather.wdgt/Icon.icns"
-        command = ('growlnotify -n "Temperatur"'
+        os.system(('growlnotify -n "Temperatur"'
                    ' -m "Temperatur {}\n{} ({})"'
-                   ' --image "{}"').format(temp, words, speed, icon)
+                   ' --image "{}"').format(temp, words, speed, icon))
 
     elif notifier == "osx":
         script = ('display notification "{} ({})"'
                   ' with title "Temperatur {}"').format(words, speed, temp)
-        command = "osascript -e '{}'".format(script)
+        os.system("osascript -e '{}'".format(script))
 
     else:
         sys.exit("Unhandled notifier. Exiting...")
-
-    return os.system(command)
 
 
 if __name__ == '__main__':
