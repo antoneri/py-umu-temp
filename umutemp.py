@@ -9,7 +9,11 @@ NS = "{http://tempuri.org/}"
 DEFAULT = "echo"
 
 def fetch_data():
-    src = urlopen(URL).read().decode('utf-8')
+    try:
+        src = urlopen(URL).read().decode('utf-8')
+    except Exception as e:
+        sys.exit("Could not connect to server. {}".format(e))
+
     xml = unescape(src)
     root = ET.fromstring(xml)[0]
 
