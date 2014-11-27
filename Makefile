@@ -1,2 +1,2 @@
 install:
-	@ln -sfv `pwd`/umutemp.py ~/bin/umutemp
+	@[[ -d ~/bin ]] && ln -sfv `pwd`/umutemp.py ~/bin/umutemp
