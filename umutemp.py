@@ -1,24 +1,23 @@
-#!/usr/bin/env python3
+#!/usr/local/bin/python3
 import sys
 from urllib.request import urlopen
 from html import unescape
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree
 
-URL = "http://www8.tfe.umu.se/WeatherWebService2012/Service.asmx/Aktuellavarden"
-NS = "{http://tempuri.org/}"
-DEFAULT = "echo"
 
 def fetch_data():
+    api_url = "http://www8.tfe.umu.se/WeatherWebService2012/Service.asmx/Aktuellavarden"
+    namespace = "{http://tempuri.org/}"
+
     try:
-        src = urlopen(URL).read().decode('utf-8')
+        src = urlopen(api_url).read().decode('utf-8')
     except Exception as e:
         sys.exit("Could not connect to server. {}".format(e))
 
     xml = unescape(src)
-    root = ET.fromstring(xml)[0]
+    root = ElementTree.fromstring(xml)[0]
 
-    tag_contents = lambda tag: root.find(NS + tag).text.strip()
-    temp, speed, words = map(tag_contents, ["tempmed", "vindh", "vindord"])
+    temp, speed, words = [root.find(namespace + tag).text.strip() for tag in ("tempmed", "vindh", "vindord")]
 
     temp = "{} °C".format(temp)
     speed = "{} m/s".format(speed)
@@ -40,17 +39,21 @@ def main(notifier):
                   ' with title "Temperatur {}"').format(words, speed, temp)
         os.system("osascript -e '{}'".format(script))
 
-
     elif notifier == "echo":
         sys.exit("{}, {} ({})".format(temp, words, speed))
 
+    elif notifier == "bitbar":
+        print(temp)
+        print("---")
+        print("{} ({})".format(words, speed))
+        print("TFE väder | href=http://www8.tfe.umu.se/weather-new/")
+
     else:
-        sys.exit("Unhandled notifier. Exiting...")
+        sys.exit("Unhandled notifier.")
 
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        main(DEFAULT)
+        main("bitbar")
     else:
         main(sys.argv[1])
-
